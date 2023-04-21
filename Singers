@@ -1,0 +1,57 @@
+/* Create table about the singers and who they are or who they are friends with */
+CREATE TABLE singers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    fullname TEXT,
+    age INTEGER,
+    hometown TEXT);
+    
+INSERT INTO singers (fullname, age, hometown) VALUES ("Bobby McBobbyFace", "12", "Nashville");
+INSERT INTO singers (fullname, age, hometown) VALUES ("Lucy BoBucie", "25", "Fargo");
+INSERT INTO singers (fullname, age, hometown) VALUES ("Banana FoFanna", "14", "Minneapolis");
+INSERT INTO singers (fullname, age, hometown) VALUES ("Shish Kabob", "20", "Nashville");
+
+CREATE table songs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    person_id INTEGER,
+    name TEXT);
+    
+INSERT INTO songs (person_id, name) VALUES (1, "Twinkle Twinkle Little Star");
+INSERT INTO songs (person_id, name) VALUES (1, "ABCs");
+INSERT INTO songs (person_id, name) VALUES (2, "The Wheels on the Bus");
+INSERT INTO songs (person_id, name) VALUES (3, "Baby Shar");
+INSERT INTO songs (person_id, name) VALUES (3, "Old Macdonald");
+INSERT INTO songs (person_id, name) VALUES (4, "Humpty Dumpty");
+INSERT INTO songs (person_id, name) VALUES (4, "If You're Happy and You Know It");
+INSERT INTO songs (person_id, name) VALUES (4, "Hey Diddle Diddle");
+
+CREATE table friends (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    person1_id INTEGER,
+    person2_id INTEGER);
+
+INSERT INTO friends (person1_id, person2_id)
+    VALUES (1, 4);
+INSERT INTO friends (person1_id, person2_id)
+    VALUES (2, 3);
+
+/* show each singer along with their age and hometown */ 
+SELECT fullname, age, hometown FROM singers;
+
+/* sort singers by their hometown */
+SELECT fullname, hometown FROM singers
+    ORDER BY hometown;
+    
+/* list each song written by singers by joining tables */
+SELECT singers.fullname, songs.name
+    FROM singers
+    JOIN songs
+    ON singers.id = songs.person_id;
+    
+/* show which singers are friends by joining tables */
+SELECT a.fullname, b.fullname
+    FROM friends
+    JOIN singers a
+    ON a.id = person1_id
+    JOIN singers b
+    ON b.id = person2_id
+    
