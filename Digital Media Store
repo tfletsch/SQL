@@ -1,0 +1,54 @@
+/*Show customers who are not in the US*/
+SELECT FirstName, LastName, CustomerId, Country FROM chinook.customers WHERE Country <> 'USA';
+
+/*Show only the customers from Brazil*/
+SELECT FirstName, LastName, CustomerId, Country FROM customers WHERE Country='Brazil';
+
+/*Find the invoices of customers who are from Brazil*/
+SELECT c.FirstName, c.LastName, i.InvoiceId, i.InvoiceDate, i.BillingCountry
+    FROM customers c
+    JOIN invoices i
+    ON c.CustomerId=i.CustomerId
+    WHERE i.BillingCountry='Brazil';
+    
+/*Show the employees who are Sales Agents*/
+SELECT FirstName, LastName, Title FROM employees WHERE Title='Sales Support Agent';
+
+/*Find a distinct list of billing countries from the Invoice table*/
+SELECT DISTINCT BillingCountry FROM invoices GROUP BY BillingCountry;
+
+/*Provide a query that shows the invoices associated with each sales agent*/
+SELECT e.FirstName, e.LastName, i.InvoiceId FROM employees e JOIN customers c ON e.EmployeeId=c.SupportRepId JOIN invoices i ON c.CustomerId=i.CustomerId GROUP BY e.EmployeeId;
+
+/*How many invoices were there in 2009?*/
+SELECT COUNT(InvoiceId) FROM invoices;
+
+/*What were the total sales for 2009?*/
+SELECT SUM(UnitPrice)*SUM(Quantity) FROM invoice_items;
+
+/*Purchased track name with each invoice ID*/
+SELECT tracks.name, invoice_items.InvoiceId
+    FROM tracks
+    JOIN invoice_items
+    ON tracks.TrackID=invoice_items.TrackId
+    GROUP BY invoice_items.InvoiceId;
+
+/*Purchased track name AND artist name with each Invoice ID*/
+SELECT tracks.name, artists.name, invoice_items.InvoiceId
+    FROM tracks
+    JOIN invoice_items
+    ON tracks.TrackID=invoice_items.TrackId
+    JOIN albums
+    ON tracks.AlbumId=albums.AlbumId
+    JOIN artists
+    ON albums.ArtistId=artists.ArtistId
+    GROUP BY invoice_items.InvoiceId;
+    
+/*Show all of the tracks including album name, media type, and genre*/
+SELECT tracks.Name as 'track', albums.Title as 'album', media_types.Name as 'media', genres.Name as 'genre'
+    FROM tracks
+    JOIN albums ON tracks.AlbumID=albums.AlbumId
+    JOIN media_types ON tracks.MediaTypeId=media_types.MediaTypeId
+    JOIN genres ON tracks.GenreId=genres.GenreId
+    GROUP BY tracks.name;
+    
