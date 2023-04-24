@@ -1,0 +1,56 @@
+/*View customer table data where there are valid order IDs*/
+SELECT * FROM BIT_DB.customers WHERE length(order_id)=6 AND order_id <> 'Order ID';
+
+/*How many orders were placed in January */
+SELECT COUNT(orderID) FROM BIT_DB.JanSales;
+
+/*How many iphones were ordered in January*/
+SELECT COUNT(orderID) FROM BIT_DB.JanSales WHERE product='iPhone';
+
+/*Inner join two tables to see acct numbers from Feb sales where orderID matches in both tables*/
+SELECT customers.acctnum FROM BIT_DB.customers INNER JOIN FebSales ON customers.order_id = FebSales.orderID;
+
+/*What was the cheapest product sold in Jan and what was the price?*/
+SELECT distinct Product, price
+FROM BIT_DB.JanSales
+WHERE  price in (SELECT min(price) FROM BIT_DB.JanSales);
+
+/*What is the total revenue for each product sold in January?*/
+SELECT product, SUM(quantity)*price FROM BIT_DB.JanSales GROUP BY product;
+
+/*Which products were sold in Feb to the address provided, how many of each product, and what was the revenue?*/
+SELECT product, SUM(quantity), SUM(quantity)*price as revenue FROM BIT_DB.FebSales WHERE location='548 Lincoln St, Seattle, WA 98101' GROUP BY product;
+
+/*How many customers ordered more than 2 products at a time, and what was the average amount spent by those customers?*/
+SELECT COUNT(distinct customers.acctnum), AVG(quantity*price) FROM BIT_DB.FebSales LEFT JOIN BIT_DB.customers ON customers.order_id=FebSales.orderID WHERE FebSales.Quantity>2 AND length(orderid)=6 AND orderid <> 'Order ID';
+
+/*List of which dates had product sales occur between Feb 13 and Feb 18*/
+SELECT orderdate
+FROM BIT_DB.FebSales
+WHERE orderdate between '02/13/19 00:00' AND '02/18/19 00:00';
+
+/*Location of orders placed on Feb 18, 2019 at 1:35*/
+SELECT location
+FROM BIT_DB.FebSales 
+WHERE orderdate = '02/18/19 01:35';
+
+/* How many orders were placed on Feb 18, 2019 without regard to time of day*/
+SELECT sum(quantity)
+FROM BIT_DB.FebSales 
+WHERE orderdate like '02/18/19%';
+
+/*Products sold in Feb related to batteries*/
+SELECT distinct Product
+FROM BIT_DB.FebSales
+WHERE Product like '%Batteries%';
+
+/*Products sold in Feb with price ending in .99*/
+SELECT distinct Product, Price
+FROM BIT_DB.FebSales 
+WHERE Price like '%.99';
+
+/*List all of the products sold in February and how many of each were sold?*/
+SELECT Product, SUM(quantity)
+FROM BIT_DB.FebSales
+WHERE location LIKE '%Los Angeles%'
+GROUP BY Product;
